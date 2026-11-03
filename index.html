@@ -1,0 +1,614 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>지구는 돌아요 | 어게인 실험과학 수학학원</title>
+<meta name="description" content="지구의 자전과 낮과 밤을 손으로 돌려 보며 알아보는 터치 활동">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b1433; --panel:#14204a; --panel2:#1c2b5e; --line:#33467f;
+  --lamp:#ffc83d; --lamp-dark:#c9931a; --lamp-soft:#3a3420;
+  --ink:#f3f6ff; --sub:#aeb9d8; --sea:#2d6fb0; --land:#6fae72; --good:#7fe0a3;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans KR",system-ui,sans-serif;font-weight:500}
+body{min-height:100vh;display:flex;flex-direction:column;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;overflow-x:hidden}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+[hidden]{display:none!important}
+svg text{font-family:"Noto Sans KR",sans-serif;font-weight:700}
+
+header{background:var(--panel);border-bottom:3px solid var(--line);padding:10px 16px}
+.head-in{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.logo{width:52px;height:52px;border-radius:16px;background:var(--bg);display:grid;place-items:center;flex:none}
+.titles{flex:1;min-width:0}
+.titles .brand{font-weight:700;font-size:16px;color:var(--sub);word-break:keep-all}
+.titles h1{margin:2px 0 0;font-weight:700;font-size:clamp(22px,3.8vw,36px);color:var(--lamp);line-height:1.2;word-break:keep-all}
+.share{flex:none;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--lamp);color:#2a2100;font-weight:700;font-size:21px;min-height:80px;min-width:80px;padding:0 24px;border-radius:999px;box-shadow:0 5px 0 var(--lamp-dark)}
+.share:active{transform:translateY(4px);box-shadow:0 1px 0 var(--lamp-dark)}
+
+nav{max-width:1100px;margin:14px auto 0;padding:0 16px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:100%}
+.tab{position:relative;min-height:80px;border-radius:20px;background:var(--panel);color:var(--sub);font-weight:700;font-size:clamp(16px,2.2vw,22px);line-height:1.25;padding:8px;border:3px solid transparent;word-break:keep-all;transition:.15s}
+.tab.on{background:var(--lamp-soft);border-color:var(--lamp);color:var(--lamp)}
+.tab .star{position:absolute;top:-8px;right:-4px;width:26px;height:26px;border-radius:50%;background:var(--lamp);color:#2a2100;font-size:15px;line-height:26px;text-align:center;display:none}
+.tab.done .star{display:block;animation:pop .5s}
+
+main{max-width:1100px;margin:0 auto;padding:16px;width:100%}
+.panel{display:none;animation:fadein .3s}
+.panel.on{display:block}
+.guide{font-weight:700;font-size:clamp(18px,2.4vw,24px);margin:4px 0 12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;word-break:keep-all}
+.guide .q{background:var(--lamp);color:#2a2100;border-radius:12px;padding:2px 10px;font-size:.8em}
+.msg{margin:14px auto 0;max-width:860px;min-height:72px;border-radius:20px;background:var(--panel);border:3px dashed var(--line);padding:14px 18px;font-weight:700;font-size:clamp(18px,2.4vw,23px);text-align:center;display:block;line-height:1.45;word-break:keep-all}
+.msg b{font-weight:700;color:var(--lamp)}
+.msg small{display:block;font-size:.75em;color:var(--sub)}
+.msg.good{background:#143a2d;border-color:var(--good);animation:pop .45s}
+.msg.warn{background:#3d2c14;border-color:#e0a14a;animation:shake .4s}
+.note{margin:12px auto 0;max-width:860px;text-align:center;font-weight:700;font-size:clamp(17px,2.2vw,21px);color:var(--lamp);word-break:keep-all}
+.big-btn{font-weight:700;font-size:22px;min-height:80px;padding:10px 28px;border-radius:999px;background:var(--lamp);color:#2a2100;box-shadow:0 5px 0 var(--lamp-dark);word-break:keep-all}
+.big-btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--lamp-dark)}
+.row{display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:12px}
+.stage{background:var(--panel);border:3px solid var(--line);border-radius:24px;padding:8px;text-align:center;overflow:hidden;min-width:0}
+.stage h2{margin:4px 0 6px;font-size:clamp(16px,2vw,19px);font-weight:700;color:var(--sub);word-break:keep-all}
+.stage svg{display:block;margin:0 auto;width:100%;height:auto;border-radius:16px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+.drag{touch-action:none;cursor:grab}
+.dir{margin-top:6px;font-weight:700;font-size:clamp(16px,2vw,19px);color:var(--sub);min-height:1.5em;word-break:keep-all}
+.dir.real{color:var(--good)}
+.dir.rev{color:#ffb27a}
+
+.chips{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px}
+.chips span{font-weight:700;font-size:17px;text-align:center;padding:10px 4px;border-radius:14px;background:var(--panel);color:#6f7ca6;word-break:keep-all;line-height:1.3}
+.chips span.on{background:var(--lamp-soft);color:var(--lamp);box-shadow:inset 0 0 0 2px var(--lamp);animation:pop .4s}
+
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:60px;background:none;margin:2px 0;touch-action:none}
+input[type=range]::-webkit-slider-runnable-track{height:16px;border-radius:99px;background:var(--panel2)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:54px;height:54px;margin-top:-19px;border-radius:50%;background:#fff;border:7px solid var(--lamp);box-shadow:0 3px 6px rgba(0,0,0,.4)}
+input[type=range]::-moz-range-track{height:16px;border-radius:99px;background:var(--panel2)}
+input[type=range]::-moz-range-thumb{width:40px;height:40px;border-radius:50%;background:#fff;border:7px solid var(--lamp)}
+.box{background:var(--panel);border:3px solid var(--line);border-radius:24px;padding:10px 18px 12px;margin-top:12px}
+.now{font-weight:900;font-size:clamp(26px,4vw,38px);color:var(--lamp);text-align:center;word-break:keep-all}
+.info{font-weight:700;font-size:clamp(16px,2vw,19px);color:var(--sub);text-align:center;word-break:keep-all}
+.ticks{position:relative;height:26px;font-weight:700;font-size:16px;color:var(--sub)}
+.ticks span{position:absolute;transform:translateX(-50%);white-space:nowrap}
+.ticks span:first-child{transform:none}.ticks span:last-child{transform:translateX(-100%)}
+.picks{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.picks button{position:relative;min-height:72px;border-radius:18px;background:var(--panel2);font-weight:700;font-size:clamp(17px,2.2vw,21px);line-height:1.25;border:3px solid transparent;word-break:keep-all}
+.picks button.on{background:var(--lamp-soft);border-color:var(--lamp);color:var(--lamp)}
+.picks button.ok::after{content:'✓';position:absolute;top:-8px;right:-4px;width:24px;height:24px;border-radius:50%;background:var(--lamp);color:#2a2100;font-size:14px;line-height:24px}
+
+.clocks{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.clock{border-radius:18px;padding:10px 6px;text-align:center;font-weight:700;border:3px solid var(--line);background:#101a3d;transition:background .2s}
+.clock.day{background:#fff4c9;color:#3a2f00;border-color:var(--lamp)}
+.clock .city{font-size:clamp(17px,2vw,20px)}
+.clock .time{font-weight:900;font-size:clamp(19px,2.5vw,25px);line-height:1.3;white-space:nowrap}
+.clock .side{font-size:15px;opacity:.75}
+
+.quiz{max-width:760px;margin:0 auto;text-align:center}
+.qtop{display:flex;justify-content:space-between;font-weight:700;font-size:21px;color:var(--sub)}
+.qtop b{color:var(--lamp);font-weight:700}
+.qcard{margin-top:10px;background:var(--panel);border:3px solid var(--line);border-radius:28px;padding:30px 20px;font-weight:700;font-size:clamp(23px,3.4vw,32px);line-height:1.45;word-break:keep-all;min-height:150px;display:flex;align-items:center;justify-content:center}
+.ox{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+.ox button{min-height:120px;border-radius:28px;font-weight:700;font-size:72px;line-height:1;color:#fff}
+.ox .o{background:#3aa0e0;box-shadow:0 6px 0 #2479b0}
+.ox .x{background:#ef6a5f;box-shadow:0 6px 0 #c4483e}
+.ox button:active{transform:translateY(4px);box-shadow:none}
+.ox button:disabled{opacity:.35}
+
+footer{margin-top:24px;background:#060c22;color:#fff;text-align:center;padding:20px 16px 26px;font-weight:700;font-size:19px;line-height:1.6}
+.toast{position:fixed;left:50%;bottom:30px;transform:translate(-50%,40px);opacity:0;background:var(--lamp);color:#2a2100;font-weight:700;font-size:20px;padding:14px 26px;border-radius:999px;z-index:70;transition:.25s;pointer-events:none;white-space:nowrap}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:60}
+.finale{position:fixed;inset:0;z-index:58;background:rgba(5,10,30,.7);display:grid;place-items:center;padding:16px;animation:fadein .3s}
+.finale-card{background:var(--panel);border:3px solid var(--lamp);border-radius:30px;padding:28px 26px 22px;text-align:center;max-width:520px;width:100%;box-shadow:0 12px 30px rgba(0,0,0,.4);animation:pop .55s}
+.finale-card h2{margin:10px 0 6px;font-weight:700;font-size:clamp(28px,4.4vw,38px);color:var(--lamp);line-height:1.3;word-break:keep-all}
+.finale-card .path{font-weight:700;font-size:20px;color:var(--sub);margin-bottom:18px;word-break:keep-all}
+
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}}
+@keyframes pop{0%{transform:scale(.7)}60%{transform:scale(1.06)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+@media (max-width:760px){
+  .two{grid-template-columns:1fr}
+  .clocks,.chips{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:560px){
+  nav{grid-template-columns:repeat(2,1fr)}
+  .tab{font-size:17px;min-height:64px}
+  .share{font-size:16px;min-height:60px;min-width:60px;padding:0 14px;gap:5px}
+  .share svg{width:18px;height:18px}
+  .logo{width:44px;height:44px}
+  .titles .brand{font-size:13px}
+  .big-btn{font-size:19px;padding:10px 20px;min-height:68px}
+  .ox button{min-height:100px}
+  .box{padding:8px 12px 10px}
+  .ticks{font-size:14px}
+}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<header>
+  <div class="head-in">
+    <div class="logo" aria-hidden="true">
+      <svg width="34" height="34" viewBox="0 0 34 34"><circle cx="14" cy="17" r="11" fill="#2d6fb0"/><path d="M14 6a11 11 0 0 0 0 22z" fill="#0b1433" opacity=".65"/><circle cx="30" cy="17" r="3.5" fill="#ffc83d"/></svg>
+    </div>
+    <div class="titles">
+      <div class="brand">어게인 실험과학 수학학원</div>
+      <h1>지구는 돌아요</h1>
+    </div>
+    <button class="share" id="share" aria-label="공유하기">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2a2100" stroke-width="2.6" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
+      <span>공유하기</span>
+    </button>
+  </div>
+</header>
+
+<nav id="tabs">
+  <button class="tab on" data-t="0">자전 돌리기<span class="star">✓</span></button>
+  <button class="tab" data-t="1">숫자로 보는 자전<span class="star">✓</span></button>
+  <button class="tab" data-t="2">세계의 낮과 밤<span class="star">✓</span></button>
+  <button class="tab" data-t="3">OX 퀴즈<span class="star">✓</span></button>
+</nav>
+
+<main>
+  <!-- 1. 자전 돌리기 -->
+  <section class="panel on" id="p0">
+    <div class="guide"><span class="q">해 보기</span>지구를 손가락으로 빙글 돌려 보세요. 램프는 그대로 있어요</div>
+    <div class="two">
+      <div class="stage">
+        <h2>북극 위에서 내려다본 지구</h2>
+        <svg id="earthSvg" class="drag" viewBox="0 0 520 400" aria-label="북극 위에서 본 지구와 램프"></svg>
+        <div class="dir" id="dir1">돌리는 방향이 여기에 나와요</div>
+      </div>
+      <div class="stage">
+        <h2>우리나라 사람이 남쪽을 보면</h2>
+        <svg id="skySvg" viewBox="0 0 520 300" aria-label="남쪽을 바라본 하늘"></svg>
+        <div class="dir" id="sky1"></div>
+      </div>
+    </div>
+    <div class="note">실제 지구는 시계 반대 방향으로 돌아요</div>
+    <div class="chips" id="chips0"><span data-c="riseE">동쪽에서 떠요</span><span data-c="peak">남쪽에서 가장 높아요</span><span data-c="setW">서쪽으로 져요</span><span data-c="riseW">거꾸로 돌려 봐요</span></div>
+    <div class="msg" id="m0">먼저 <b>시계 반대 방향</b>으로 돌려 보세요. 램프가 어느 쪽에서 떠오를까요?</div>
+  </section>
+
+  <!-- 2. 숫자로 보는 자전 -->
+  <section class="panel" id="p1">
+    <div class="guide"><span class="q">해 보기</span>막대를 밀어 위도를 바꿔 보세요. 땅이 움직이는 빠르기는 어떻게 달라질까요?</div>
+    <div class="stage"><svg id="latSvg" style="max-width:520px" viewBox="0 0 520 300" aria-label="위도에 따라 달라지는 자전 속도"></svg></div>
+    <div class="box">
+      <div class="now" id="speed"></div>
+      <div class="info" id="latInfo"></div>
+      <input type="range" id="lat" min="0" max="90" step="0.1" value="0" aria-label="위도">
+      <div class="ticks"><span style="left:0">0°</span><span style="left:42%">37.8°</span><span style="left:100%">90°</span></div>
+      <div class="picks" id="picks"><button data-v="0">적도<br>0°</button><button data-v="37.8">파주<br>37.8°</button><button data-v="90">북극점<br>90°</button></div>
+    </div>
+    <div class="box">
+      <div class="two" style="align-items:center">
+        <svg id="hourSvg" viewBox="0 0 240 240" style="width:100%;max-width:220px;margin:0 auto;display:block" aria-label="시간에 따라 도는 각도"></svg>
+        <div>
+          <div class="now">1시간에 15°</div>
+          <div class="info" id="hourInfo"></div>
+          <input type="range" id="hour" min="0" max="24" step="1" value="1" aria-label="시간">
+          <div class="ticks"><span style="left:0">0시간</span><span style="left:50%">12시간</span><span style="left:100%">24시간</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="msg" id="m1">적도 · 파주 · 북극점을 모두 찾아보고, 시간 막대를 24시간까지 밀어 보세요</div>
+  </section>
+
+  <!-- 3. 세계의 낮과 밤 -->
+  <section class="panel" id="p2">
+    <div class="guide"><span class="q">해 보기</span>지구를 돌려 서울을 낮 12시로 맞춰 보세요</div>
+    <div class="stage">
+      <h2>북극을 가운데 두고 남반구까지 펼쳐 그린 지구</h2>
+      <svg id="worldSvg" class="drag" viewBox="0 0 560 430" style="max-width:640px" aria-label="낮과 밤이 나뉜 지구"></svg>
+    </div>
+    <div class="clocks" id="clocks"></div>
+    <div class="note">햇빛을 받는 쪽이 낮, 못 받는 쪽이 밤이에요. 지구가 자전하면서 낮과 밤이 되풀이돼요</div>
+    <div class="info" style="margin-top:8px">각 나라의 표준 시각이에요</div>
+    <div class="msg" id="m2"></div>
+  </section>
+
+  <!-- 4. OX 퀴즈 -->
+  <section class="panel" id="p3">
+    <div class="quiz">
+      <div class="qtop"><span id="qnum">1 / 5</span><span>맞힌 문제 <b id="score">0</b>개</span></div>
+      <div class="qcard" id="qtext"></div>
+      <div class="ox"><button class="o" data-a="O" aria-label="O">O</button><button class="x" data-a="X" aria-label="X">X</button></div>
+      <div class="msg" id="m3">맞으면 O, 틀리면 X를 눌러요!</div>
+      <div class="row"><button class="big-btn" id="next" hidden>다음 문제 ▶</button></div>
+    </div>
+  </section>
+</main>
+
+<footer>어게인 실험과학 수학학원<br>교육문의 010.2976.5774</footer>
+
+<div class="finale" id="finale" hidden>
+  <div class="finale-card">
+    <svg width="72" height="72" viewBox="0 0 34 34"><circle cx="14" cy="17" r="11" fill="#2d6fb0"/><path d="M14 6a11 11 0 0 0 0 22z" fill="#0b1433" opacity=".65"/><circle cx="30" cy="17" r="3.5" fill="#ffc83d"/></svg>
+    <h2>완성!<br>지구의 자전을 알아냈어요</h2>
+    <div class="path">지구가 서쪽에서 동쪽으로 돌아서<br>해는 동쪽에서 떠서 서쪽으로 지는 것처럼 보여요</div>
+    <button class="big-btn" id="finaleClose">닫기</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<canvas id="fx"></canvas>
+
+<script>
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const rad = d => d * Math.PI / 180, deg = r => r * 180 / Math.PI;
+const wrap = a => ((a % 360) + 540) % 360 - 180;   // -180 ~ 180
+
+/* ---------- 소리 ---------- */
+let ac;
+function audio() { return ac = ac || new (window.AudioContext || window.webkitAudioContext)(); }
+function tone(f, d = .15, type = 'sine', at = 0, v = .18) {
+  try {
+    const a = audio(), t = a.currentTime + at, o = a.createOscillator(), g = a.createGain();
+    o.type = type; o.frequency.value = f;
+    g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(.001, t + d);
+    o.connect(g).connect(a.destination); o.start(t); o.stop(t + d);
+  } catch (e) {}
+}
+const sfx = {
+  pop: () => { tone(520, .09, 'triangle'); tone(780, .1, 'triangle', .06); },
+  good: () => [523, 659, 784, 1047].forEach((f, i) => tone(f, .25, 'triangle', i * .09)),
+  boing: () => { tone(330, .12, 'sine', 0, .12); tone(262, .22, 'sine', .1, .12); },
+  twinkle: () => { tone(1320, .12, 'sine', 0, .12); tone(1760, .18, 'sine', .07, .1); },
+  chime: () => [1047, 1319, 1568, 2093].forEach((f, i) => tone(f, 1.4, 'sine', i * .18, .09))
+};
+addEventListener('pointerdown', () => { try { audio().resume(); } catch (e) {} }, { once: true });
+
+/* ---------- 색종이 · 반짝이 ---------- */
+const cv = $('#fx'), cx = cv.getContext('2d');
+let parts = [], running = false;
+const COLORS = ['#ffc83d', '#fff3b0', '#4aa3df', '#7fe0a3'];
+function resize() { cv.width = innerWidth * devicePixelRatio; cv.height = innerHeight * devicePixelRatio; }
+addEventListener('resize', resize); resize();
+function burst(x, y, n = 80, star = false) {
+  for (let i = 0; i < n; i++) {
+    const a = Math.random() * Math.PI * 2, sp = (star ? 3 : 5) + Math.random() * (star ? 4 : 9);
+    parts.push({ x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - (star ? 1 : 6), r: Math.random() * 6.28, vr: (Math.random() - .5) * .3,
+      s: 6 + Math.random() * 6, c: COLORS[i % COLORS.length], life: star ? 45 : 140, star });
+  }
+  if (!running) { running = true; requestAnimationFrame(loop); }
+}
+function confetti() { burst(innerWidth * .5, innerHeight * .4, 60); }
+function sparkleAt(el) { const r = el.getBoundingClientRect(); burst(r.left + r.width / 2, r.top + r.height / 2, 18, true); }
+function drawStar(s) { cx.beginPath(); for (let i = 0; i < 10; i++) { const rr = i % 2 ? s / 2.4 : s, a = i * Math.PI / 5; cx.lineTo(Math.cos(a) * rr, Math.sin(a) * rr); } cx.fill(); }
+function loop() {
+  const k = devicePixelRatio; cx.clearRect(0, 0, cv.width, cv.height);
+  parts = parts.filter(p => p.life-- > 0);
+  for (const p of parts) {
+    p.vy += p.star ? .12 : .25; p.vx *= .985; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+    cx.save(); cx.translate(p.x * k, p.y * k); cx.rotate(p.r); cx.globalAlpha = Math.min(1, p.life / 30); cx.fillStyle = p.c;
+    if (p.star) drawStar(p.s * k); else cx.fillRect(-p.s * k / 2, -p.s * k / 4, p.s * k, p.s * k / 2);
+    cx.restore();
+  }
+  if (parts.length) requestAnimationFrame(loop); else { running = false; cx.clearRect(0, 0, cv.width, cv.height); }
+}
+
+/* ---------- 공통 ---------- */
+function say(el, text, kind = '') { el.className = 'msg'; void el.offsetWidth; if (kind) el.classList.add(kind); el.innerHTML = text; }
+function toast(t) { const el = $('#toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove('on'), 2000); }
+let finaleShown = false;
+function done(i) {
+  const t = $$('.tab')[i];
+  if (t.classList.contains('done')) return;
+  t.classList.add('done'); sfx.good(); sparkleAt(t); confetti();
+  if (!finaleShown && $$('.tab.done').length === 4) { finaleShown = true; setTimeout(finale, 1500); }
+}
+function finale() { $('#finale').hidden = false; sfx.chime(); confetti(); }
+$('#finaleClose').onclick = () => { $('#finale').hidden = true; sfx.pop(); };
+
+$('#share').onclick = async () => {
+  const url = location.href;
+  if (navigator.share) { try { await navigator.share({ title: '지구는 돌아요', text: '어게인 실험과학 수학학원 · 지구는 돌아요', url }); return; } catch (e) { if (e.name === 'AbortError') return; } }
+  try { await navigator.clipboard.writeText(url); }
+  catch (e) { const ta = document.createElement('textarea'); ta.value = url; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+  toast('주소가 복사됐어요');
+};
+
+$$('.tab').forEach(t => t.onclick = () => {
+  $$('.tab').forEach(x => x.classList.toggle('on', x === t));
+  $$('.panel').forEach((p, i) => p.classList.toggle('on', i == t.dataset.t));
+  sfx.pop();
+});
+
+/* 원을 따라 끌기 : 시계 반대 방향이 + (화면 y는 아래로 커지므로 뒤집음) */
+function spin(svg, c, on) {
+  let last = null;
+  const ang = e => {
+    const p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY;
+    const q = p.matrixTransform(svg.getScreenCTM().inverse());
+    return Math.hypot(q.x - c.x, q.y - c.y) < 8 ? null : deg(Math.atan2(c.y - q.y, q.x - c.x));
+  };
+  svg.addEventListener('pointerdown', e => { e.preventDefault(); svg.setPointerCapture(e.pointerId); last = ang(e); svg.dragging = true; });
+  svg.addEventListener('pointermove', e => {
+    if (!svg.dragging) return;
+    const a = ang(e); if (a === null) return;
+    if (last !== null) { const d = wrap(a - last); if (d) on(d); }
+    last = a;
+  });
+  const end = () => { svg.dragging = false; last = null; };
+  svg.addEventListener('pointerup', end); svg.addEventListener('pointercancel', end);
+}
+// a에서 b로 움직이는 동안 k도(360° 주기)를 지났는가
+function crossed(a, b, k) {
+  const lo = Math.min(a, b), hi = Math.max(a, b);
+  return Math.floor((hi - k) / 360) > Math.floor((lo - k) / 360) || (hi - k) % 360 === 0;
+}
+
+/* ---------- 대륙 (경도, 위도 어림 윤곽) ---------- */
+const LAND = [
+  [[-168,65],[-156,71],[-125,70],[-95,72],[-80,73],[-62,60],[-55,52],[-66,45],[-75,38],[-81,31],[-80,25],[-84,30],[-97,27],[-97,19],[-88,16],[-83,9],[-79,8],[-92,15],[-105,20],[-115,30],[-124,40],[-125,49],[-140,60],[-155,58],[-165,60]],
+  [[-55,82],[-22,82],[-20,72],[-42,60],[-53,67],[-60,76]],
+  [[-79,8],[-62,11],[-50,1],[-35,-6],[-39,-17],[-48,-25],[-57,-36],[-65,-42],[-68,-54],[-74,-50],[-72,-30],[-70,-18],[-81,-5]],
+  [[-6,35],[10,37],[32,31],[37,20],[43,12],[51,11],[40,-5],[39,-16],[32,-27],[20,-35],[15,-25],[12,-6],[9,4],[-8,5],[-17,14],[-13,27]],
+  [[-9,37],[-9,43],[-2,48],[8,54],[5,60],[14,68],[28,71],[60,70],[75,73],[105,77],[140,73],[180,68],[170,60],[155,58],[140,52],[135,43],[129,38],[129,35],[126,34.5],[125,39],[121,40],[122,31],[118,24],[108,20],[106,10],[100,13],[103,2],[98,10],[92,22],[80,15],[77,8],[72,20],[60,25],[52,27],[48,30],[59,22],[52,16],[43,13],[39,21],[35,28],[35,36],[27,37],[22,38],[16,39],[12,44],[3,42]],
+  [[130,32],[136,34],[141,37],[142,43],[140,42],[137,37],[131,34]],
+  [[114,-22],[122,-18],[131,-12],[136,-12],[140,-17],[146,-19],[153,-27],[150,-37],[140,-38],[130,-32],[116,-34]],
+  [[96,5],[106,-6],[120,-9],[140,-7],[130,0],[118,5]]
+];
+// 경도 λ는 화면 각도 λ에 놓는다(북극에서 보면 동쪽이 시계 반대 방향)
+const polar = (c, lon, r) => [c.x + r * Math.cos(rad(lon)), c.y - r * Math.sin(rad(lon))];
+const landPath = (c, rOf, skip) => LAND.filter(s => !skip || !skip(s)).map(s =>
+  'M' + s.map(([lon, lat]) => polar(c, lon, rOf(lat)).map(v => v.toFixed(1)).join(' ')).join('L') + 'Z').join('');
+function starsSvg(n, w, h, seed = 3) {
+  let o = '', s = seed;
+  const rnd = () => (s = (s * 9301 + 49297) % 233280) / 233280;
+  for (let i = 0; i < n; i++) o += `<circle cx="${(rnd() * w).toFixed(0)}" cy="${(rnd() * h).toFixed(0)}" r="${(.8 + rnd() * 1.4).toFixed(1)}" fill="#fff" opacity="${(.3 + rnd() * .5).toFixed(2)}"/>`;
+  return o;
+}
+const halfDisk = (c, R, side) => `M${c.x} ${c.y - R}A${R} ${R} 0 0 ${side} ${c.x} ${c.y + R}Z`;   // side 0 = 왼쪽 반원
+const lampSvg = (x, y) => `<g><circle cx="${x}" cy="${y}" r="42" fill="url(#glow)"/><circle cx="${x}" cy="${y}" r="17" fill="#ffc83d" stroke="#fff3b0" stroke-width="3"/>
+  <text x="${x}" y="${y + 44}" text-anchor="middle" font-size="19" fill="#ffc83d">램프</text></g>`;
+const GLOW = `<radialGradient id="glow"><stop offset="0" stop-color="#fff6c8"/><stop offset=".5" stop-color="#ffd25a" stop-opacity=".5"/><stop offset="1" stop-color="#ffd25a" stop-opacity="0"/></radialGradient>`;
+
+/* ---------- 1. 자전 돌리기 ---------- */
+const PAJU = 37.8, KOREA_LON = 127;
+const C1 = { x: 200, y: 200 }, R1 = 165, FIG_R = R1 * Math.cos(rad(PAJU));
+$('#earthSvg').innerHTML = `<defs>${GLOW}<marker id="ah" markerUnits="userSpaceOnUse" viewBox="0 0 8 8" markerWidth="16" markerHeight="16" refX="5" refY="4" orient="auto"><path d="M0 0L8 4L0 8z" fill="#7fe0a3"/></marker></defs>
+  ${starsSvg(40, 520, 400)}
+  <g opacity=".55">${[-34, 0, 34].map(y => `<line x1="430" y1="${200 + y}" x2="${C1.x + Math.sqrt(R1 * R1 - y * y) + 4}" y2="${200 + y}" stroke="#ffc83d" stroke-width="3" stroke-dasharray="4 8"/>`).join('')}</g>
+  ${lampSvg(462, 200)}
+  <g id="earth1"><circle cx="${C1.x}" cy="${C1.y}" r="${R1}" fill="#2d6fb0"/>
+    <path d="${landPath(C1, lat => R1 * Math.cos(rad(Math.max(lat, 0))), s => s.every(p => p[1] < 0))}" fill="#6fae72" stroke="#3f7a4a" stroke-width="1.5"/></g>
+  <path d="${halfDisk(C1, R1, 0)}" fill="#050a1e" opacity=".62"/>
+  <circle cx="${C1.x}" cy="${C1.y}" r="${R1}" fill="none" stroke="#9fb8ff" stroke-width="2"/>
+  <circle cx="${C1.x}" cy="${C1.y}" r="4" fill="#fff"/>
+  <text x="${C1.x}" y="${C1.y - 10}" text-anchor="middle" font-size="16" fill="#fff" stroke="#0b1433" stroke-width="3" paint-order="stroke">북극</text>
+  <text x="${C1.x + 70}" y="${C1.y + 7}" text-anchor="middle" font-size="19" fill="#fff" stroke="#0b1433" stroke-width="3" paint-order="stroke">낮</text>
+  <text x="${C1.x - 70}" y="${C1.y + 7}" text-anchor="middle" font-size="19" fill="#fff" stroke="#0b1433" stroke-width="3" paint-order="stroke">밤</text>
+  <path d="M${C1.x + 150} ${C1.y - 134}A201 201 0 0 0 ${C1.x + 40} ${C1.y - 197}" fill="none" stroke="#7fe0a3" stroke-width="5" stroke-linecap="round" marker-end="url(#ah)" opacity=".85"/>
+  <text x="${C1.x + 208}" y="30" text-anchor="middle" font-size="16" fill="#7fe0a3">실제 방향</text>
+  <g id="fig1"></g>`;
+$('#skySvg').innerHTML = `<defs>${GLOW}<linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1"><stop id="sky0" offset="0"/><stop id="sky1g" offset="1"/></linearGradient></defs>
+  <rect width="520" height="240" fill="url(#skyG)"/><g id="skyStars">${starsSvg(50, 520, 225, 11)}</g>
+  <path id="skyPath" fill="none" stroke="#fff3b0" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round" opacity=".7"/>
+  <g id="skyLamp"><circle r="48" fill="url(#glow)"/><circle r="17" fill="#ffc83d" stroke="#fff3b0" stroke-width="3"/></g>
+  <rect y="238" width="520" height="62" fill="#3f6d4c"/>
+  <g font-size="28" fill="#fff" text-anchor="middle" stroke="#1f3a28" stroke-width="4" paint-order="stroke"><text x="50" y="280">동</text><text x="260" y="280">남</text><text x="470" y="280">서</text></g>`;
+const SX1 = az => 260 + (az - 180) * 2.34, SY1 = alt => 238 - alt * 3.2;
+// 램프의 방위 · 높이 : H = 낮 12시 자리에서 벗어난 각도 (+ 는 오후 쪽)
+function sky(H) {
+  const f = rad(PAJU), h = rad(H);
+  return [(deg(Math.atan2(Math.sin(h), Math.cos(h) * Math.sin(f))) + 540) % 360, deg(Math.asin(Math.cos(f) * Math.cos(h)))];
+}
+$('#skyPath').setAttribute('d', [...Array(37)].map((_, i) => { const [az, alt] = sky(-90 + i * 5); return (i ? 'L' : 'M') + SX1(az).toFixed(1) + ' ' + SY1(alt).toFixed(1); }).join(''));
+const SKY = [[-1, '#0b1433', '#1a2650'], [-.35, '#0f1b40', '#25336a'], [-.12, '#2d3f7c', '#f39c4a'], [.05, '#5d9fd8', '#ffc98a'], [.3, '#3f97d9', '#bfe4fa'], [1, '#2f86cf', '#a9dcf7']];
+const hx = c => [1, 3, 5].map(i => parseInt(c.slice(i, i + 2), 16));
+const mix = (a, b, t) => '#' + hx(a).map((v, i) => Math.round(v + (hx(b)[i] - v) * t).toString(16).padStart(2, '0')).join('');
+function skyAt(h) {
+  for (let i = 1; i < SKY.length; i++) if (h <= SKY[i][0]) {
+    const [h0, t0, b0] = SKY[i - 1], [h1, t1, b1] = SKY[i], f = (h - h0) / (h1 - h0);
+    return [mix(t0, t1, f), mix(b0, b1, f)];
+  }
+  return [SKY[5][1], SKY[5][2]];
+}
+// theta : 램프 쪽에서 시계 반대 방향으로 잰 사람의 자리. -90 = 해돋이 자리, 0 = 남중, +90 = 해넘이 자리
+let theta = -125;
+const seen0 = new Set();
+function hit0(c) {
+  if (seen0.has(c)) return;
+  seen0.add(c); const el = $(`#chips0 [data-c="${c}"]`); el.classList.add('on'); sparkleAt(el); sfx.twinkle();
+  if (seen0.size === 4) setTimeout(() => { done(0); say($('#m0'), '돌리는 방향이 바뀌면 램프가 뜨는 쪽도 바뀌어요.<br><b>실제 지구는 시계 반대 방향</b>이라 동쪽에서 떠서 서쪽으로 져요', 'good'); }, 400);
+}
+function draw1() {
+  const H = wrap(theta), a = rad(theta);
+  $('#earth1').setAttribute('transform', `rotate(${-(theta - KOREA_LON)} ${C1.x} ${C1.y})`);
+  // 사람 : 지구 중심에서 바깥쪽이 남쪽, 시계 반대 방향 쪽이 동쪽
+  const u = [Math.cos(a), -Math.sin(a)], e = [-Math.sin(a), -Math.cos(a)];
+  const at = (r, t = 0) => [C1.x + u[0] * r + e[0] * t, C1.y + u[1] * r + e[1] * t];
+  const [fx0, fy0] = at(FIG_R), [fx1, fy1] = at(FIG_R + 18), [hx1, hy1] = at(FIG_R + 25), [sx, sy] = at(FIG_R + 46), [ex, ey] = at(FIG_R + 8, 27), [wx, wy] = at(FIG_R + 8, -27), [sax, say2] = at(FIG_R + 58);
+  const lab = (x, y, s, c) => `<text x="${x}" y="${y + 6}" text-anchor="middle" font-size="17" fill="${c}" stroke="#0b1433" stroke-width="4" paint-order="stroke">${s}</text>`;
+  $('#fig1').innerHTML = `<line x1="${fx0}" y1="${fy0}" x2="${fx1}" y2="${fy1}" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="${hx1}" cy="${hy1}" r="8" fill="#ffd9b0" stroke="#fff" stroke-width="2"/>
+    <line x1="${hx1 + u[0] * 9}" y1="${hy1 + u[1] * 9}" x2="${sx}" y2="${sy}" stroke="#ffc83d" stroke-width="3" marker-end="url(#ah)" opacity=".9"/>
+    ${lab(sax, say2, '남', '#ffc83d')}${lab(ex, ey, '동', '#fff')}${lab(wx, wy, '서', '#fff')}`;
+  const [az, alt] = sky(H), up = alt > 0, sinA = Math.sin(rad(alt)), [top, bot] = skyAt(sinA);
+  $('#sky0').setAttribute('stop-color', top); $('#sky1g').setAttribute('stop-color', bot);
+  $('#skyStars').setAttribute('opacity', clamp((-sinA - .02) / .25));
+  $('#skyLamp').style.display = up ? '' : 'none';
+  if (up) $('#skyLamp').setAttribute('transform', `translate(${SX1(az)} ${SY1(alt)})`);
+  $('#sky1').textContent = !up ? '램프가 안 보여요 (밤)' : Math.abs(H) < 3 ? '램프가 정남쪽, 가장 높은 곳에 있어요' : H < 0 ? '램프가 동쪽 하늘에 있어요' : '램프가 서쪽 하늘에 있어요';
+}
+spin($('#earthSvg'), C1, d => {
+  const prev = theta; theta += d;
+  const dir = $('#dir1');
+  dir.className = 'dir ' + (d > 0 ? 'real' : 'rev');
+  dir.textContent = d > 0 ? '↺ 시계 반대 방향 : 실제 지구와 같아요' : '↻ 시계 방향 : 실제 지구와 반대예요';
+  const m = $('#m0');
+  if (d > 0) {
+    if (crossed(prev, theta, -90)) { hit0('riseE'); say(m, '램프가 <b>동쪽</b>에서 떠올라요<small>계속 시계 반대 방향으로 돌려 보세요</small>'); }
+    if (crossed(prev, theta, 0)) { hit0('peak'); say(m, '램프가 <b>남쪽</b>에서 가장 높아요<small>하루 중 가장 높은 자리예요</small>'); }
+    if (crossed(prev, theta, 90)) { hit0('setW'); say(m, '램프가 <b>서쪽</b>으로 져요<small>이번에는 시계 방향으로 거꾸로 돌려 보세요</small>'); }
+  } else {
+    if (crossed(prev, theta, 90)) { hit0('riseW'); say(m, '거꾸로 돌리니 램프가 <b>서쪽</b>에서 떠요<small>실제 지구는 이렇게 돌지 않아요</small>'); }
+    if (crossed(prev, theta, 0)) say(m, '램프가 <b>남쪽</b>에서 가장 높아요<small>지금은 서쪽에서 동쪽으로 움직여요</small>');
+    if (crossed(prev, theta, -90)) say(m, '거꾸로 돌리니 램프가 <b>동쪽</b>으로 져요');
+  }
+  draw1();
+});
+draw1();
+
+/* ---------- 2. 숫자로 보는 자전 ---------- */
+const C2 = { x: 190, y: 150 }, R2 = 125;
+const speedOf = lat => 1670 * Math.cos(rad(lat));
+const comma = n => n.toLocaleString('ko-KR');
+const near = v => Math.round(speedOf(v) / 10) * 10;
+$('#latSvg').innerHTML = `<defs><marker id="ah2" markerUnits="userSpaceOnUse" viewBox="0 0 7 7" markerWidth="24" markerHeight="24" refX="3" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7z" fill="#ffc83d"/></marker></defs>
+  ${starsSvg(30, 520, 300, 7)}
+  <line x1="${C2.x}" y1="${C2.y - R2 - 18}" x2="${C2.x}" y2="${C2.y + R2 + 18}" stroke="#aeb9d8" stroke-width="3" stroke-dasharray="6 6"/>
+  <circle cx="${C2.x}" cy="${C2.y}" r="${R2}" fill="#2d6fb0" stroke="#9fb8ff" stroke-width="2"/>
+  <ellipse cx="${C2.x}" cy="${C2.y}" rx="${R2}" ry="${R2 * .18}" fill="none" stroke="#cfe0ff" stroke-width="1.5" opacity=".6"/>
+  <text x="${C2.x + 14}" y="${C2.y - R2 - 4}" font-size="17" fill="#fff">북극점</text>
+  <text x="${C2.x - R2 - 8}" y="${C2.y + 6}" text-anchor="end" font-size="16" fill="#cfe0ff">적도</text>
+  <ellipse id="latRing" cx="${C2.x}" fill="none" stroke="#ffc83d" stroke-width="4"/>
+  <line id="latArrow" stroke="#ffc83d" stroke-width="7" stroke-linecap="round" marker-end="url(#ah2)"/>
+  <circle id="latDot" r="8" fill="#fff" stroke="#ffc83d" stroke-width="3"/>
+  <text id="latEast" font-size="17" fill="#ffc83d">동쪽</text>`;
+const seen1 = new Set();
+function mark1(k) {
+  if (seen1.has(k)) return;
+  seen1.add(k);
+  const b = $(`#picks [data-v="${k}"]`);
+  if (b) { b.classList.add('ok'); sparkleAt(b); sfx.twinkle(); }
+  if (seen1.size === 4) setTimeout(() => { done(1); say($('#m1'), '적도에서 멀어질수록 땅이 도는 둘레가 짧아져요.<br><b>그래서 1시간에 도는 각도는 15°로 같아도 땅의 빠르기는 달라요</b>', 'good'); }, 400);
+}
+function drawLat(user) {
+  const inp = $('#lat');
+  let v = +inp.value;
+  if (v <= 1) v = 0; else if (Math.abs(v - PAJU) <= 1) v = PAJU; else if (v >= 89) v = 90;
+  if (v !== +inp.value) inp.value = v;
+  const y = C2.y - R2 * Math.sin(rad(v)), rx = R2 * Math.cos(rad(v)), ry = rx * .18, sp = speedOf(v), L = Math.max(0, sp * .1);
+  const ring = $('#latRing'); ring.setAttribute('cy', y); ring.setAttribute('rx', Math.max(rx, 0)); ring.setAttribute('ry', Math.max(ry, 0));
+  const dy = y + ry, ar = $('#latArrow');
+  $('#latDot').setAttribute('cx', C2.x); $('#latDot').setAttribute('cy', dy);
+  ar.setAttribute('x1', C2.x); ar.setAttribute('y1', dy); ar.setAttribute('x2', C2.x + L); ar.setAttribute('y2', dy);
+  ar.style.display = v === 90 ? 'none' : '';
+  const et = $('#latEast'); et.setAttribute('x', C2.x + L + 12); et.setAttribute('y', dy + 6); et.style.display = v === 90 ? 'none' : '';
+  const name = v === 0 ? '적도' : v === PAJU ? '파주' : v === 90 ? '북극점' : '위도 ' + Math.round(v) + '°';
+  $('#speed').textContent = v === 90 ? `${name} 시속 0km` : `${name} 시속 약 ${comma(near(v))}km`;
+  $('#latInfo').textContent = v === 0 ? '위도 0° · 땅이 가장 빠르게 움직여요' : v === PAJU ? '위도 37.8° · 적도보다 도는 둘레가 짧아서 더 느려요' : v === 90 ? '위도 90° · 제자리에서 돌기만 해요' : `위도 ${v.toFixed(1)}° · 위도가 높을수록 느려져요`;
+  $$('#picks button').forEach(b => b.classList.toggle('on', +b.dataset.v === v));
+  if (user && (v === 0 || v === PAJU || v === 90)) mark1(String(v));
+}
+$('#lat').addEventListener('input', () => drawLat(true));
+$$('#picks button').forEach(b => b.onclick = () => { sfx.pop(); $('#lat').value = b.dataset.v; drawLat(true); });
+drawLat();
+$('#hourSvg').innerHTML = `<circle cx="120" cy="120" r="100" fill="#2d6fb0" stroke="#9fb8ff" stroke-width="2"/><path id="wedge" fill="#ffc83d" opacity=".75"/>
+  <line x1="120" y1="120" x2="225" y2="120" stroke="#fff" stroke-width="3" stroke-dasharray="4 5"/><circle cx="120" cy="120" r="5" fill="#fff"/>`;
+function drawHour() {
+  const h = +$('#hour').value, a = h * 15, w = $('#wedge');
+  if (h === 24) w.setAttribute('d', 'M120 20A100 100 0 1 0 120 220A100 100 0 1 0 120 20Z');
+  else { const [x, y] = polar({ x: 120, y: 120 }, a, 100); w.setAttribute('d', h ? `M120 120L220 120A100 100 0 ${a > 180 ? 1 : 0} 0 ${x.toFixed(2)} ${y.toFixed(2)}Z` : ''); }
+  $('#hourInfo').textContent = h === 24 ? '24시간이면 360°, 딱 한 바퀴예요' : `${h}시간이면 ${h} × 15° = ${a}°`;
+  if (h === 24) { mark1('24'); }
+}
+$('#hour').addEventListener('input', drawHour);
+drawHour();
+
+/* ---------- 3. 세계의 낮과 밤 ---------- */
+const C3 = { x: 235, y: 215 }, R3 = 200, rOf3 = lat => R3 * (90 - Math.max(lat, -60)) / 150;
+const CITIES = [
+  { name: '서울', lon: 127, lat: 37.6, off: 9 },
+  { name: '뉴욕', lon: -74, lat: 40.7, off: -5 },
+  { name: '상파울루', lon: -46.6, lat: -23.5, off: -3 },
+  { name: '시드니', lon: 151.2, lat: -33.9, off: 10 }
+];
+const fmtClock = h => {
+  const m = Math.round(((h % 24) + 24) % 24 * 60) % 1440, H = Math.floor(m / 60), mm = String(m % 60).padStart(2, '0');
+  const ap = H === 0 ? '밤' : H < 6 ? '새벽' : H < 12 ? '오전' : H === 12 ? '낮' : H < 18 ? '오후' : H < 21 ? '저녁' : '밤';
+  return `${ap} ${H % 12 || 12}시 ${mm}분`;
+};
+$('#worldSvg').innerHTML = `<defs>${GLOW}<radialGradient id="ball" cx=".5" cy=".5" r=".55"><stop offset="0" stop-color="#3a86c8"/><stop offset="1" stop-color="#1d4f86"/></radialGradient></defs>
+  ${starsSvg(40, 560, 430, 5)}
+  <g opacity=".55">${[-90, -45, 0, 45, 90].map(y => `<line x1="490" y1="${C3.y + y}" x2="${C3.x + Math.sqrt(R3 * R3 - y * y) + 4}" y2="${C3.y + y}" stroke="#ffc83d" stroke-width="3" stroke-dasharray="4 8"/>`).join('')}</g>
+  ${lampSvg(518, C3.y)}
+  <g id="earth3"><circle cx="${C3.x}" cy="${C3.y}" r="${R3}" fill="url(#ball)"/>
+    <path d="${landPath(C3, rOf3)}" fill="#6fae72" stroke="#3f7a4a" stroke-width="1.5"/>
+    <circle cx="${C3.x}" cy="${C3.y}" r="${rOf3(0)}" fill="none" stroke="#cfe0ff" stroke-width="1.5" stroke-dasharray="5 6" opacity=".7"/></g>
+  <path d="${halfDisk(C3, R3, 0)}" fill="#050a1e" opacity=".68"/>
+  <circle cx="${C3.x}" cy="${C3.y}" r="${R3}" fill="none" stroke="#9fb8ff" stroke-width="2"/>
+  <circle cx="${C3.x}" cy="${C3.y}" r="4" fill="#fff"/>
+  <text x="462" y="34" text-anchor="middle" font-size="20" fill="#ffc83d" stroke="#0b1433" stroke-width="4" paint-order="stroke">낮</text>
+  <text x="42" y="34" text-anchor="middle" font-size="20" fill="#cfe0ff" stroke="#0b1433" stroke-width="4" paint-order="stroke">밤</text>
+  <g id="cities3"></g>`;
+$('#clocks').innerHTML = CITIES.map((c, i) => `<div class="clock" id="ck${i}"><div class="city">${c.name}</div><div class="time"></div><div class="side"></div></div>`).join('');
+let utcDeg = 21 * 15;       // 세계 표준시를 각도로 (15° = 1시간). 처음엔 서울 오전 6시
+let done3 = false;
+function shownUtc() {       // 15분 단위로 맞추고, 서울 낮 12시(UTC 3시) 근처는 그 자리에 붙인다
+  const q = Math.round(utcDeg / 15 * 4) / 4, t = ((q % 24) + 24) % 24;
+  return Math.abs(t - 3) <= .25 ? 3 : t;
+}
+function draw3() {
+  const t = shownUtc(), rot = (t - 12) * 15;   // 경도 λ의 화면 각도 = λ + rot
+  $('#earth3').setAttribute('transform', `rotate(${-rot} ${C3.x} ${C3.y})`);
+  let dots = '';
+  const day = [], night = [];
+  CITIES.forEach((c, i) => {
+    const ang = c.lon + rot, lit = Math.cos(rad(ang)) > 0, [x, y] = polar(C3, ang, rOf3(c.lat));
+    (lit ? day : night).push(c.name);
+    const lx = clamp(x, 44, 516);
+    dots += `<circle cx="${x}" cy="${y}" r="8" fill="${lit ? '#ffc83d' : '#fff'}" stroke="#0b1433" stroke-width="2.5"/>
+      <text x="${lx}" y="${y - 14}" text-anchor="middle" font-size="21" fill="#fff" stroke="#0b1433" stroke-width="5" paint-order="stroke">${c.name}</text>`;
+    const el = $('#ck' + i);
+    el.classList.toggle('day', lit);
+    el.querySelector('.time').textContent = fmtClock(t + c.off);
+    el.querySelector('.side').textContent = lit ? '낮인 쪽' : '밤인 쪽';
+  });
+  $('#cities3').innerHTML = dots;
+  const m = $('#m2');
+  if (t === 3) {
+    const text = '서울이 <b>낮 12시</b>일 때 상파울루는 <b>밤 12시</b>예요.';
+    if (draw3.last !== text) { say(m, text, 'good'); draw3.last = text; }
+    if (!done3) { done3 = true; sparkleAt($('#ck0')); done(2); }
+  } else {
+    const text = `낮인 쪽 : <b>${day.join(' · ') || '없음'}</b><small>밤인 쪽 : ${night.join(' · ') || '없음'}</small>`;
+    if (draw3.last !== text) { say(m, text); draw3.last = text; }
+  }
+}
+spin($('#worldSvg'), C3, d => { utcDeg += d; draw3(); });
+draw3();
+
+/* ---------- 4. OX 퀴즈 ---------- */
+const QS = [
+  { q: '해는 지구 둘레를 하루에 한 바퀴 돈다.', a: 'X', why: '돌고 있는 것은 지구예요. 지구가 돌아서 해가 움직이는 것처럼 보여요.' },
+  { q: '지구는 서쪽에서 동쪽으로 자전한다.', a: 'O', why: '북극 위에서 보면 시계 반대 방향, 곧 서쪽에서 동쪽이에요.' },
+  { q: '지구는 1시간에 15°씩 돈다.', a: 'O', why: '24시간에 360°를 도니까 360 ÷ 24 = 15°예요.' },
+  { q: '파주의 땅은 적도의 땅보다 빠르게 움직인다.', a: 'X', why: '적도는 시속 약 1,670km, 파주는 시속 약 1,320km예요. 적도가 더 빨라요.' },
+  { q: '서울이 낮 12시일 때 상파울루는 밤이다.', a: 'O', why: '햇빛을 받는 쪽이 낮, 못 받는 쪽이 밤이에요. 지구가 자전하면서 낮과 밤이 되풀이돼요.' }
+];
+let qi = 0, score = 0;
+function showQ() {
+  $('#qnum').textContent = `${qi + 1} / ${QS.length}`; $('#qtext').textContent = QS[qi].q;
+  $$('.ox button').forEach(b => b.disabled = false); $('#next').hidden = true;
+  say($('#m3'), '맞으면 O, 틀리면 X를 눌러요!');
+}
+$$('.ox button').forEach(b => b.onclick = () => {
+  const Q = QS[qi], ok = b.dataset.a === Q.a;
+  $$('.ox button').forEach(x => x.disabled = x !== b);
+  if (ok) { score++; $('#score').textContent = score; sfx.good(); sparkleAt(b); say($('#m3'), `딩동댕! 정답은 <b>${Q.a}</b><small>${Q.why}</small>`, 'good'); }
+  else { sfx.boing(); say($('#m3'), `아쉬워요! 정답은 <b>${Q.a}</b><small>${Q.why}</small>`, 'warn'); }
+  $('#next').hidden = false; $('#next').textContent = qi < QS.length - 1 ? '다음 문제 ▶' : '결과 보기 ▶';
+});
+function nextHandler() {
+  sfx.pop();
+  if (qi < QS.length - 1) { qi++; showQ(); return; }
+  if (score === QS.length) { say($('#m3'), `${QS.length}문제를 모두 맞혔어요.<br><b>지구의 자전을 정확히 이해했어요</b>`, 'good'); done(3); }
+  else say($('#m3'), `${QS.length}문제 중 <b>${score}개</b> 맞혔어요!<br><small>틀린 문제를 다시 보면 모두 맞힐 수 있어요</small>`);
+  $('#qtext').textContent = '수고했어요!'; $$('.ox button').forEach(x => x.disabled = true);
+  $('#next').textContent = '다시 풀기 ↺';
+  $('#next').onclick = () => { qi = 0; score = 0; $('#score').textContent = 0; $('#next').onclick = nextHandler; sfx.pop(); showQ(); };
+}
+$('#next').onclick = nextHandler;
+showQ();
+</script>
+</body>
+</html>
